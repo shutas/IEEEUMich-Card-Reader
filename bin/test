@@ -9,6 +9,10 @@
 # Stop on Errors
 set -e
 
+echo ""
+echo "<=== STARTING TEST SCRIPT ===>"
+echo ""
+
 # Runs pycodestyle on reader.py
 pycodestyle reader.py
 
@@ -17,3 +21,6 @@ pydocstyle reader.py
 
 # Runs pylint on reader.py
 pylint --reports=n --disable=cyclic-import reader.py
+
+echo "<=== ALL TESTS PASSED ===>"
+echo ""
