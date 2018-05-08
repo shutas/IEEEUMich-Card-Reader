@@ -11,6 +11,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from .config import SENDER_EMAIL, DESTINATION_EMAIL, CREDENTIALS_FILENAME,\
                     SHEET_FILENAME, UNIQNAME_COL_INDEX, VALUE_COL_INDEX
 
+
 class CardProcessor(object):
     """Card Processor Class."""
 
@@ -63,7 +64,7 @@ class CardProcessor(object):
                 print("-> FAIL: Password incorrect")
 
         # Get Destination Email
-        destination_email = input("-> REQUIRED: Enter email destination " + 
+        destination_email = input("-> REQUIRED: Enter email destination " +
                                   "address (if not specified, " +
                                   "it will send to " + DESTINATION_EMAIL +
                                   "): ")
@@ -103,10 +104,10 @@ class CardProcessor(object):
         """Parse MCard Data and Add to Spreadsheet."""
         # If Card Data is NOT Registered
         if card_data not in self.registered_members_dict:
-            
+
             # Print Prompt
             print("-> WARNING: This card has not been registered yet.")
-            
+
             # Ask User for Uniqname
             new_uniqname = input("-> REQUIRED: Please enter your uniqname: ")
 
@@ -114,15 +115,17 @@ class CardProcessor(object):
             while True:
 
                 input_data = input("-> REQUIRED: Confirm that your uniqname" +
-                                   " (" + new_uniqname + ") is correct (y/n): ")
+                                   " (" + new_uniqname + ") " +
+                                   "is correct (y/n): ")
 
                 # If Uniqname is Correct
                 if input_data.lower() == "yes" or input_data.lower() == "y":
                     break
-                
+
                 # If Uniqname is NOT Correct
                 elif input_data.lower() == "no" or input_data.lower() == "n":
-                    new_uniqname = input("-> REQUIRED: Please enter your uniqname: ")
+                    new_uniqname = input("-> REQUIRED: Please enter " +
+                                         "your uniqname: ")
 
                 # If Input is Unrecognized
                 else:
@@ -142,12 +145,14 @@ class CardProcessor(object):
 
         # Update Uniqname-Count Dictionary as Needed
         if self.registered_members_dict[card_data] in self.uniqname_count_dict:
-            self.uniqname_count_dict[self.registered_members_dict[card_data]] += 1
+            self.uniqname_count_dict[self.registered_members_dict
+                                     [card_data]] += 1
         else:
-            self.uniqname_count_dict[self.registered_members_dict[card_data]] = 1
+            self.uniqname_count_dict[self.registered_members_dict
+                                     [card_data]] = 1
 
         # Print Confirmation Message
-        print("-> Thank you! Your uniqname (" + 
+        print("-> Thank you! Your uniqname (" +
               self.registered_members_dict[card_data] +
               ") has been recorded.\n")
 
@@ -158,9 +163,8 @@ class CardProcessor(object):
                  'https://www.googleapis.com/auth/drive']
 
         # Retrieve Credentials from JSON
-        credentials = \
-        ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_FILENAME,
-                                                         scope)
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(
+                    CREDENTIALS_FILENAME, scope)
 
         # Authenticate Credentials
         google_credentials = gspread.authorize(credentials)
@@ -182,13 +186,11 @@ class CardProcessor(object):
         num_registered_members = len(registered_uniqname_list) - 1
 
         for i in range(num_registered_members):
-            self.registered_members_dict[registered_value_list[i + 1]] = registered_uniqname_list[i + 1]
+            self.registered_members_dict[registered_value_list[i + 1]] =\
+                registered_uniqname_list[i + 1]
 
     def terminate(self):
         """Terminate Card Processor."""
-        # Print Newline for Aesthetics
-        print()
-        
         # Ask for Confirmation
         while True:
 
@@ -207,4 +209,4 @@ class CardProcessor(object):
 
             # If Input is Unrecognized
             else:
-                print("-> ERROR: Please select (y)es or (n)o.\n")
+                print("-> ERROR: Please select (y)es or (n)o.")

@@ -19,6 +19,6 @@ CREDENTIALS_FILENAME = os.path.join(
 # Google Sheets Filename
 SHEET_FILENAME = "IEEE Members Fall 2018"
 
-# Google Sheets 
+# Google Sheets
 UNIQNAME_COL_INDEX = 1
 VALUE_COL_INDEX = 2
