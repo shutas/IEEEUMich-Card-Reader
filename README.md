@@ -27,6 +27,7 @@ After you started the program,
 - Swipe as many MCards. The reader will keep track of all uniqnames and swipe counts per event.
 - Type `done` to save and send data. The program will safely exit once it successfully sends the email.
 - Type `help` to show the instructions/commands to operate the program.
+- Type `terminate` to end the program without saving or sending data.
 
 # Uninstallation
 In your terminal, run:  
