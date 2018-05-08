@@ -20,15 +20,17 @@ class CardProcessor(object):
         self.sender_password = ""
         self.destination_email = DESTINATION_EMAIL
         self.sheet = None
-        self.user_dict = {}
+        self.uniqname_count_dict = {}
+        self.registered_members_dict = {}
 
     def initialize(self):
         """Retrieve Email Credentials for Sending Email."""
         print("\n<=== Card Processor Started Execution ===>\n")
 
-        # Load Database in Google Sheets
+        # Load Database from Google Sheets
         print("Loading Database... ")
         self.open_sheet()
+        self.construct_members_set()
         print("-> SUCCESS: Database Loaded\n")
 
         # Append Today's Date to Event Name
@@ -129,6 +131,22 @@ class CardProcessor(object):
 
         # Open Sheet
         self.sheet = google_credentials.open(SHEET_FILENAME).sheet1
+
+    def construct_members_set(self):
+        """Construct Set of Registered Members."""
+        # Retrieve List of Registered Uniqnames and Values
+        registered_uniqname_list = self.sheet.col_values(1)
+        registered_value_list = self.sheet.col_values(2)
+
+        # Assert Properties of Retrieved Data
+        assert(registered_uniqname_list[0] == "uniqname")
+        assert(registered_value_list[0] == "value")
+
+        # Load Registered Uniqnames to Card Processor
+        num_registered_members = len(registered_uniqname_list) - 1
+
+        for i in range(num_registered_members):
+            self.registered_members_dict[registered_value_list[i + 1]] = registered_uniqname_list[i + 1]
 
     def terminate(self):
         """Terminate Card Processor."""
