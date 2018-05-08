@@ -36,12 +36,12 @@ def main():
                 break
 
         # MCard Swiped
-        elif len(input_data) == 72:
+        elif len(input_data) > 65:
             master.process_mcard(input_data)
 
         # Unrecognized Command
         else:
-            print("Error: Unrecognized command - Please try again.\n")
+            print("-> ERROR: Unrecognized command - Please try again.\n")
 
     print("<=== Card Processor Finished Execution ===>\n")
 

@@ -8,7 +8,8 @@ import json
 import gspread
 from getpass import getpass
 from oauth2client.service_account import ServiceAccountCredentials
-from .config import SENDER_EMAIL, DESTINATION_EMAIL, CREDENTIALS_FILENAME, SHEET_FILENAME
+from .config import SENDER_EMAIL, DESTINATION_EMAIL, CREDENTIALS_FILENAME,\
+                    SHEET_FILENAME, UNIQNAME_COL_INDEX, VALUE_COL_INDEX
 
 class CardProcessor(object):
     """Card Processor Class."""
@@ -39,9 +40,6 @@ class CardProcessor(object):
 
     def send_email(self):
         """Send the Result via Email."""
-        # Print Newline for Aesthetics
-        print()
-
         # Set Up SMTP Server
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.ehlo()
@@ -52,21 +50,21 @@ class CardProcessor(object):
 
         while not authenticated:
             # Get Password from User Input
-            self.sender_password = getpass("Enter password for " +
+            self.sender_password = getpass("-> REQUIRED: Enter password for " +
                                            self.sender_email + ": ")
 
             # Check if Password is Correct
             try:
                 server.login(self.sender_email, self.sender_password)
                 authenticated = True
-                print()
+                print("-> SUCCESS: Password confirmed")
             # If Password is Incorrect
             except smtplib.SMTPAuthenticationError:
-                print("-> FAIL: Password incorrect\n")
+                print("-> FAIL: Password incorrect")
 
         # Get Destination Email
-        destination_email = input("Enter email destination address " +
-                                  "(if not specified, " +
+        destination_email = input("-> REQUIRED: Enter email destination " + 
+                                  "address (if not specified, " +
                                   "it will send to " + DESTINATION_EMAIL +
                                   "): ")
 
@@ -77,7 +75,7 @@ class CardProcessor(object):
         # Create Email Message
         message_content = ""
 
-        for uniqname, count in self.user_dict.items():
+        for uniqname, count in self.uniqname_count_dict.items():
             message_content += uniqname + " " + str(count) + "\n"
 
         message = '\r\n'.join(['To: %s' % self.destination_email,
@@ -101,19 +99,57 @@ class CardProcessor(object):
         # Terminate SMTP Server
         server.quit()
 
-    def process_mcard(self, input_data):
+    def process_mcard(self, card_data):
         """Parse MCard Data and Add to Spreadsheet."""
-        # Sanitize Input Data
-        uniqname = input_data.lower()
+        # If Card Data is NOT Registered
+        if card_data not in self.registered_members_dict:
+            
+            # Print Prompt
+            print("-> WARNING: This card has not been registered yet.")
+            
+            # Ask User for Uniqname
+            new_uniqname = input("-> REQUIRED: Please enter your uniqname: ")
 
-        # Update User Dictionary
-        if uniqname in self.user_dict:
-            self.user_dict[uniqname] += 1
+            # Confirm Uniqname is Correct
+            while True:
+
+                input_data = input("-> REQUIRED: Confirm that your uniqname" +
+                                   " (" + new_uniqname + ") is correct (y/n): ")
+
+                # If Uniqname is Correct
+                if input_data.lower() == "yes" or input_data.lower() == "y":
+                    break
+                
+                # If Uniqname is NOT Correct
+                elif input_data.lower() == "no" or input_data.lower() == "n":
+                    new_uniqname = input("-> REQUIRED: Please enter your uniqname: ")
+
+                # If Input is Unrecognized
+                else:
+                    print("-> ERROR: Please select (y)es or (n)o.")
+
+            # Next Row Index = Current Members + Header(1) + Next(1)
+            next_row_index = len(self.registered_members_dict) + 2
+
+            # Add to Google Sheets
+            self.sheet.update_cell(next_row_index, UNIQNAME_COL_INDEX,
+                                   new_uniqname)
+            self.sheet.update_cell(next_row_index, VALUE_COL_INDEX,
+                                   card_data)
+
+            # Add to Registered Members Dict
+            self.registered_members_dict[card_data] = new_uniqname
+
+        # Update Uniqname-Count Dictionary as Needed
+        if self.registered_members_dict[card_data] in self.uniqname_count_dict:
+            self.uniqname_count_dict[self.registered_members_dict[card_data]] += 1
         else:
-            self.user_dict[uniqname] = 1
+            self.uniqname_count_dict[self.registered_members_dict[card_data]] = 1
 
-        # Print Newline for Aesthetics
-        print()
+        # Print Confirmation Message
+        print("-> Thank you! Your uniqname (" + 
+              self.registered_members_dict[card_data] +
+              ") has been recorded.\n")
 
     def open_sheet(self):
         """Open Google Sheet."""
@@ -156,7 +192,7 @@ class CardProcessor(object):
         # Ask for Confirmation
         while True:
 
-            input_data = input("Are you sure you want to terminate the " +
+            input_data = input("-> Are you sure you want to terminate the " +
                                "program WITHOUT saving data? (y/n): ")
 
             # If Termination is Requested
@@ -171,4 +207,4 @@ class CardProcessor(object):
 
             # If Input is Unrecognized
             else:
-                print("Error: Please select (y)es or (n)o.\n")
+                print("-> ERROR: Please select (y)es or (n)o.\n")

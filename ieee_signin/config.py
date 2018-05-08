@@ -16,5 +16,9 @@ CREDENTIALS_FILENAME = os.path.join(
     "ieee_signin", "credentials.json"
 )
 
-# Google Sheet Filename
+# Google Sheets Filename
 SHEET_FILENAME = "IEEE Members Fall 2018"
+
+# Google Sheets 
+UNIQNAME_COL_INDEX = 1
+VALUE_COL_INDEX = 2
