@@ -4,8 +4,11 @@
 
 import smtplib
 import datetime
+import json
+import gspread
 from getpass import getpass
-from .config import SENDER_EMAIL, DESTINATION_EMAIL
+from oauth2client.service_account import ServiceAccountCredentials
+from .config import SENDER_EMAIL, DESTINATION_EMAIL, CREDENTIALS_FILENAME, SHEET_FILENAME
 
 class CardProcessor(object):
     """Card Processor Class."""
@@ -16,13 +19,17 @@ class CardProcessor(object):
         self.sender_email = SENDER_EMAIL
         self.sender_password = ""
         self.destination_email = DESTINATION_EMAIL
+        self.sheet = None
         self.user_dict = {}
 
     def initialize(self):
         """Retrieve Email Credentials for Sending Email."""
         print("\n<=== Card Processor Started Execution ===>\n")
 
-        # TODO: Load Database
+        # Load Database in Google Sheets
+        print("Loading Database... ")
+        self.open_sheet()
+        print("-> SUCCESS: Database Loaded\n")
 
         # Append Today's Date to Event Name
         self.event_name = input("Enter event name: ") + " " +\
@@ -105,6 +112,23 @@ class CardProcessor(object):
 
         # Print Newline for Aesthetics
         print()
+
+    def open_sheet(self):
+        """Open Google Sheet."""
+        # Specify Scope
+        scope = ['https://spreadsheets.google.com/feeds',
+                 'https://www.googleapis.com/auth/drive']
+
+        # Retrieve Credentials from JSON
+        credentials = \
+        ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_FILENAME,
+                                                         scope)
+
+        # Authenticate Credentials
+        google_credentials = gspread.authorize(credentials)
+
+        # Open Sheet
+        self.sheet = google_credentials.open(SHEET_FILENAME).sheet1
 
     def terminate(self):
         """Terminate Card Processor."""
