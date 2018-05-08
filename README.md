@@ -10,6 +10,9 @@ Python program for signing in members at events for IEEE Student Branch at the U
 # Installation
 Navigate to the project root directory (IEEEUMich-Card-Reader) in your terminal.
 
+If you don't have pip, install by:  
+`sudo easy_install pip`
+
 If you already have pip installed, update pip if necessary:  
 `pip install --upgrade pip`
 
