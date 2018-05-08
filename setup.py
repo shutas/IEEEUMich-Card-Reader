@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='ieee-signin',
     version='1.0.0',
-    packages=['ieee-signin'],
+    packages=['ieee_signin'],
     include_package_data=True,
     install_requires=[
         "pycodestyle==2.4.0",
@@ -12,7 +12,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'ieee-signin = ieee-signin.__main__:main'
+            'ieee-signin=ieee_signin.__main__:main'
         ]
     },
 )

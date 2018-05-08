@@ -3,6 +3,8 @@
 # Written by Shuta Suzuki (shutas@umich.edu)
 
 
+from .card_processor import CardProcessor
+
 def main():
     """Driver for Card Reader."""
     # Initialize CardProcessor Master
