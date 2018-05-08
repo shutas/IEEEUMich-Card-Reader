@@ -32,7 +32,8 @@ def main():
 
         # "terminate" Command Selected
         elif input_data.lower() == "terminate":
-            if master.terminate():
+            master.terminate()
+            if master.termination_confirmed:
                 break
 
         # MCard Swiped

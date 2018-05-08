@@ -4,9 +4,8 @@
 
 import smtplib
 import datetime
-import json
-import gspread
 from getpass import getpass
+import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from .config import SENDER_EMAIL, DESTINATION_EMAIL, CREDENTIALS_FILENAME,\
                     SHEET_FILENAME, UNIQNAME_COL_INDEX, VALUE_COL_INDEX
@@ -18,6 +17,7 @@ class CardProcessor(object):
     def __init__(self):
         """Construct Card Processor Class."""
         self.event_name = ""
+        self.termination_confirmed = False
         self.sender_email = SENDER_EMAIL
         self.sender_password = ""
         self.destination_email = DESTINATION_EMAIL
@@ -164,7 +164,7 @@ class CardProcessor(object):
 
         # Retrieve Credentials from JSON
         credentials = ServiceAccountCredentials.from_json_keyfile_name(
-                    CREDENTIALS_FILENAME, scope)
+            CREDENTIALS_FILENAME, scope)
 
         # Authenticate Credentials
         google_credentials = gspread.authorize(credentials)
@@ -179,8 +179,8 @@ class CardProcessor(object):
         registered_value_list = self.sheet.col_values(2)
 
         # Assert Properties of Retrieved Data
-        assert(registered_uniqname_list[0] == "uniqname")
-        assert(registered_value_list[0] == "value")
+        assert registered_uniqname_list[0] == "uniqname"
+        assert registered_value_list[0] == "value"
 
         # Load Registered Uniqnames to Card Processor
         num_registered_members = len(registered_uniqname_list) - 1
@@ -200,12 +200,13 @@ class CardProcessor(object):
             # If Termination is Requested
             if input_data.lower() == "y" or input_data.lower() == "yes":
                 print()
-                return True
+                self.termination_confirmed = True
+                break
 
             # If Termination is NOT Requested
             elif input_data.lower() == "n" or input_data.lower() == "no":
                 print()
-                return False
+                break
 
             # If Input is Unrecognized
             else:

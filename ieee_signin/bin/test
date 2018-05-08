@@ -20,7 +20,7 @@ pycodestyle ..
 pydocstyle ..
 
 # Runs pylint
-pylint --reports=n --disable=cyclic-import ..
+pylint --reports=n --disable=too-many-instance-attributes ieee_signin
 
 echo "<=== ALL TESTS PASSED ===>"
 echo ""
