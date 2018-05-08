@@ -4,7 +4,8 @@
 
 import smtplib
 import datetime
-
+from getpass import getpass
+from .config import SENDER_EMAIL, DESTINATION_EMAIL
 
 class CardProcessor(object):
     """Card Processor Class."""
@@ -12,9 +13,9 @@ class CardProcessor(object):
     def __init__(self):
         """Construct Card Processor Class."""
         self.event_name = ""
-        self.sender_email = "ieee.umich.donotreply@gmail.com"
+        self.sender_email = SENDER_EMAIL
         self.sender_password = ""
-        self.destination_email = "IEEE.VPComm@umich.edu"
+        self.destination_email = DESTINATION_EMAIL
         self.user_dict = {}
 
     def initialize(self):
@@ -42,8 +43,8 @@ class CardProcessor(object):
 
         while not authenticated:
             # Get Password from User Input
-            self.sender_password = input("Enter password for " +
-                                         "ieee.umich.donotreply@gmail.com: ")
+            self.sender_password = getpass("Enter password for " +
+                                           self.sender_email + ": ")
 
             # Check if Password is Correct
             try:
@@ -57,7 +58,8 @@ class CardProcessor(object):
         # Get Destination Email
         destination_email = input("Enter email destination address " +
                                   "(if not specified, " +
-                                  "it will send to VPComm): ")
+                                  "it will send to " + DESTINATION_EMAIL +
+                                  "): ")
 
         # Update Destination Email if Necessary
         if destination_email:
@@ -103,3 +105,28 @@ class CardProcessor(object):
 
         # Print Newline for Aesthetics
         print()
+
+    def terminate(self):
+        """Terminate Card Processor."""
+        # Print Newline for Aesthetics
+        print()
+        
+        # Ask for Confirmation
+        while True:
+
+            input_data = input("Are you sure you want to terminate the " +
+                               "program WITHOUT saving data? (y/n): ")
+
+            # If Termination is Requested
+            if input_data.lower() == "y" or input_data.lower() == "yes":
+                print()
+                return True
+
+            # If Termination is NOT Requested
+            elif input_data.lower() == "n" or input_data.lower() == "no":
+                print()
+                return False
+
+            # If Input is Unrecognized
+            else:
+                print("Error: Please select (y)es or (n)o.\n")

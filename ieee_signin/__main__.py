@@ -19,20 +19,29 @@ def main():
     while True:
 
         # Retrieve Input
-        input_data = input("Swipe MCard or Enter Command: ").strip()
+        input_data = input("Swipe MCard or enter command: ").strip()
 
-        # "done" Option Selected
+        # "done" Command Selected
         if input_data.lower() == "done":
             master.send_email()
             break
 
-        # "help" Option Selected
+        # "help" Command Selected
         elif input_data.lower() == "help":
             print_menu()
 
+        # "terminate" Command Selected
+        elif input_data.lower() == "terminate":
+            if master.terminate():
+                break
+
         # MCard Swiped
-        else:
+        elif len(input_data) == 72:
             master.process_mcard(input_data)
+
+        # Unrecognized Command
+        else:
+            print("Error: Unrecognized command - Please try again.\n")
 
     print("<=== Card Processor Finished Execution ===>\n")
 
@@ -47,9 +56,10 @@ def print_menu():
 
         <<< Scan your MCard to begin registration >>>
 
-        Options:
-            done    Save data and exit program
-            help    Prints main menu
+        Commands:
+            done        Save data and exit program
+            help        Prints main menu
+            terminate   Terminate program without saving data
         """)
 
 
