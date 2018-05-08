@@ -10,14 +10,14 @@ Python program for signing in members at events for IEEE Student Branch at the U
 # Installation
 Navigate to the project root directory (IEEEUMich-Card-Reader) in your terminal.
 
-If you already have pip installed, update pip if necessary:
+If you already have pip installed, update pip if necessary:  
 `pip install --upgrade pip`
 
-Install the package using:
+Install the package using:  
 `pip install -e .`
 
 # Usage
-Run the program:
+Run the program:  
 `ieee-signin`
 
 After you started the program,
@@ -26,5 +26,5 @@ After you started the program,
 - Swipe as many MCards. The reader will keep track of all uniqnames and swipe counts per event.
 
 # Uninstallation
-In your terminal, run:
+In your terminal, run:  
 `pip uninstall -y ieee-signin`
