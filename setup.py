@@ -1,3 +1,5 @@
+"""Package Setup Settings."""
+
 from setuptools import setup
 
 setup(
