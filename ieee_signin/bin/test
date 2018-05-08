@@ -13,14 +13,14 @@ echo ""
 echo "<=== STARTING TEST SCRIPT ===>"
 echo ""
 
-# Runs pycodestyle on reader.py
-pycodestyle reader.py
+# Runs pycodestyle
+pycodestyle ..
 
-# Runs pydocstyle on reader.py
-pydocstyle reader.py
+# Runs pydocstyle
+pydocstyle ..
 
-# Runs pylint on reader.py
-pylint --reports=n --disable=cyclic-import reader.py
+# Runs pylint
+pylint --reports=n --disable=cyclic-import ..
 
 echo "<=== ALL TESTS PASSED ===>"
 echo ""
