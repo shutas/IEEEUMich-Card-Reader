@@ -1,5 +1,6 @@
 # IEEEUMich-Card-Reader
-Creator: Shuta Suzuki (shutas@umich.edu)
+Creator: Shuta Suzuki (shutas@umich.edu)  
+Version: 1.0.0 (Released - May 8th 2018)
 
 Python program for signing in members at events for IEEE Student Branch at the University of Michigan - Ann Arbor.  
 
