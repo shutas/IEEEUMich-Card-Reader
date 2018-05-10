@@ -30,6 +30,8 @@ After you started the program,
 - Type `help` to show the instructions/commands to operate the program.
 - Type `terminate` to end the program without saving or sending data.
 
+Warning: You need `credentials.json` under ieee_signin directory to access the Google Sheets database. This gives administrative access to U-M's IEEE Google API, so if you need this file, please check with appropriate officers.
+
 # Uninstallation
 In your terminal, run:  
 `pip uninstall -y ieee-signin`
